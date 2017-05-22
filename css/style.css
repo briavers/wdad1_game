@@ -1,0 +1,49 @@
+/***************************************************
+* @author Brian Verschoore
+* @created 27/04/2017
+* @modified 04 /05/2016
+* @copyright Copyright © 2016-2017 Artevelde University College Ghent
+* @function catch and trow something
+* @TODO A LOT
+****************************************************/
+html{
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    background: url(../img/bg.jpg) no-repeat center center;
+    background-size: cover;
+    color: #FFF;
+    text-align: center;
+}
+
+#barn {
+    width: 700px;
+    height: 500px;
+    margin: auto;
+    background: url(../img/barn.jpg) no-repeat center center;
+    background-size: cover;
+    border: 5px solid yellow;
+    position: relative;
+    
+}
+#barn .cock {
+    position: absolute;
+    right: 0;
+    top: -100px;
+    background: url(../img/cock.png) no-repeat center center;
+    background-size: contain;
+    width: 140px;
+    height: 140px;
+}
+.hiddenImages{
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+    opacity: 0.01;
+        
+}
