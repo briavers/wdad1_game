@@ -151,13 +151,13 @@ var Rat = function(c, element){
            // onChange: c.renderAll.bind(c),
             onComplete: function(){
             if(!t.stop){
-                console.log(newPosition)
+                //console.log(newPosition)
                 if(newPosition == 30){
-                    console.log(newPosition)
+                  //  console.log(newPosition)
                     t.run(c.width-30);
                     t.rat.set('flipX', true);
                 } else{
-                    console.log(newPosition + " 3")
+                   // console.log(newPosition + " 3")
                     t.run(30);
                     t.rat.set('flipX', false);
                 }
@@ -258,6 +258,57 @@ var newAngle = t.egg.getAngle() + rotation;
 	}
     
 }
+
+var Rocket = function(c, left, element){
+    
+    var t = this
+    this.rocket = null;
+    this.element = element;
+    
+    this.size = {
+        width: 23,
+        height: 100
+    }
+    
+    this.position = {
+        left: left,
+        top: 640
+    }
+
+    /* this.position = {
+        left: c.layerX,
+        top: c.height-40 
+    }*/
+    this.draw = function(){
+        
+       // console.log(xPositionCursor + " +2")
+        
+        
+        this.rocket = new fabric.Image(t.element,{
+            width: t.size.width,
+            height: t.size.height,
+            left: t.position.left,
+            top: t.position.top,
+            originX: 'center',
+            originY: 'bottom',
+            selectable: false
+        });
+        
+        c.add(t.rocket);
+    };
+  
+    this.shoot = function(){
+        t.rocket.animate('top', -20,{
+            duration: 750,
+            onComlete : function(){
+            c.remove(t.rocket);
+        } 
+        });
+    } 
+    
+    
+    }
+    
 
 
         

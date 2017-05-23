@@ -20,7 +20,6 @@ window.onload = function(){
     var chicken = new Chicken(canvas, 350, 160, elementChicken);
 
     
-    
    
     var elementBasket = document.getElementById('imgBasket');
     
@@ -30,8 +29,53 @@ window.onload = function(){
     function moveBasket(options) {
         var xPositionCursor = options.e.layerX;
         someBasket.basket.left = xPositionCursor;
+        return xPositionCursor
     }
-
+    
+    
+   
+    
+    
+    var elementRocket = document.getElementById('imgRocket')
+    var someRocket = new Rocket(canvas, elementRocket);
+    
+   
+    
+    
+    
+    canvas.on('mouse:down', shootRocket);
+    
+    function shootRocket(options) {
+        
+        var xPositionCursor = options.e.layerX;
+        //console.log(xPositionCursor)
+        var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
+        
+        
+        someRocket.draw()
+        someRocket.shoot() 
+        
+    
+        
+        
+    }
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     var rat = new Rat(canvas, elementRat);
 
     var eggs = []
@@ -218,7 +262,12 @@ if (radomLeft > 250) eggy.roll(180);
         var max = canvas.width - 50;
         return Math.floor(Math.random()*max-min+1)+min;
     }
- }
     
+
+    
+    
+    
+ }
+
 
 
