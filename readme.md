@@ -9,3 +9,4 @@
 
 Bugs: 
         one has to wait a few seconds between stop and start button
+        size is curent issue, is resolved in ofline file
