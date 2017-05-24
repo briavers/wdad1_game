@@ -17,11 +17,13 @@ window.onload = function(){
     var elementChicken = document.getElementById('imgChicken');
     var elementRat = document.getElementById('imgRat')
     
-    var chicken = new Chicken(canvas, 350, 160, elementChicken);
+    var chicken = new Chicken(canvas, 450, -20, elementChicken);
 
     
    
     var elementBasket = document.getElementById('imgBasket');
+    
+    
     
     var someBasket = new Basket(canvas, elementBasket);
     someBasket.draw();
@@ -78,7 +80,7 @@ window.onload = function(){
     
     var rat = new Rat(canvas, elementRat);
 
-    var eggs = []
+    var containers = []
     
 
     
@@ -87,7 +89,7 @@ window.onload = function(){
 
 function monitorGame(){
     //cheack the eggs in basket
-    checkEggs();
+    checkContainer();
     checkRat();
 }
 
@@ -118,27 +120,30 @@ else{
     
     
     
-function checkEggs(){
+function checkContainer(){
     //console.log(eggs)
-    for(var i = 0; i<eggs.length; i++){
-        var egg = eggs[i];
+    for(var i = 0; i<containers.length; i++){
+        var container = containers[i];
         
-        var x = egg.egg.left;
-        var y = egg.egg.top;
+        var x = container.container.left;
+        var y = container.container.top;
         
         
-        if (egg.hasFallen){
+        if (container.hasFallen){
             //romove from erray
-            eggs.splice(i, 1)
+            containers.splice(i, 1)
+            canvas.remove(container.container);
+            console.log("it should be removed now")
         }
-        if (y > 400 && egg.hasFallen ==false){
+        if (y > 700 && container.hasFallen ==false){
             var basketPosition = someBasket.basket.left;
             var basketPadding = 50;
             
             if((basketPosition - basketPadding)< x && x< (basketPosition + basketPadding)){
-                egg.hasFallen = true;
+                container.hasFallen = true;
                 score++;
                 elScore.textContent=score;
+                canvas.remove(container.container);
                 
             }
         }
@@ -150,22 +155,23 @@ function checkEggs(){
     
     
     function checkRat(){
-    for(var i = 0; i < eggs.length; i++){
-        var egg = eggs[i];
+    for(var i = 0; i < containers.length; i++){
+        var container = containers[i];
         
-        var x = egg.egg.left;
-        var y = egg.egg.top;
+        var x = container.container.left;
+        var y = container.container.top;
        // console.log(y)
         
-        if (y==115){
+        if (y>200 && y<250){
             var ratPosition = rat.rat.left;
-            var ratPadding = 75;
+            var ratPadding = 55;
            // console.log('test y==100')
             
             
             if((ratPosition - ratPadding) < x && x < (ratPosition + ratPadding)){
-                egg.hasFallen = true;
-                canvas.remove(egg.egg);
+                container.hasFallen = true;
+                canvas.remove(container.container);
+                
               //  console.log('rat position true')
             };
             
@@ -179,22 +185,28 @@ function checkEggs(){
     var btnPause = document.getElementById('btnPause');
     var btnStop = document.getElementById('btnStop');
     
-    var gameStatus = 'stop';
-    var createEggInterval;
+    var gameStatus = 'start';
+    var createContainerInterval;
     var monitorGameInterval;
     
-   var createEggs = function(){
-		var eggy = new Egg(canvas, 320, 100);
-		eggy.draw();
-		eggy.fall();
-        eggs.push(eggy)
-	
+    
+       var createContainers = function(){
+       var elementContainer = document.getElementById('imgContainer')
+		var someContainer = new Container(canvas, elementContainer);
+		someContainer.draw();
+           
+           
+		someContainer.fall();
+            
+    containers.push(someContainer)
+	console.log(containers)
+
     
     
 
 var radomLeft = randomXPosition();
-if (radomLeft > 250) eggy.roll(180);
-    else eggy.roll(-180);
+if (radomLeft > 250) someContainer.roll(180);
+    else someContainer.roll(-180);
     
     }
     
@@ -209,7 +221,7 @@ if (radomLeft > 250) eggy.roll(180);
         monitorGameInterval = setInterval(monitorGame, 50);
         
         
-        createEggInterval = setInterval(createEggs, 3000);
+        createContainerInterval = setInterval(createContainers, 3000);
         
         
         
@@ -227,33 +239,33 @@ if (radomLeft > 250) eggy.roll(180);
     
     
     
-    
-    btnStop.addEventListener('click', function(){
-         gameStatus = 'stop';
-         chicken.stop = true;
-        rat.stop = true;
-        canvas.remove(chicken.chicken)
-        canvas.remove(rat.rat)
-        for(var i = 0; i< eggs.length; i++){
-            var currentEgg = eggs[i];
-            canvas.remove(currentEgg.egg);
-        }
-        
-         var elScore = document.getElementById('scoreValue');
-        score = 0
-        elScore.textContent=0;
-               
-        
-        //intervallen stop zetten
-        clearInterval(createEggInterval);
-        clearInterval(monitorGameInterval);
-        
-        
-        
-        btnStart.disabled = false;
-      
-        btnStop.disabled = true;
-    });
+
+            btnStop.addEventListener('click', function(){
+                 gameStatus = 'stop';
+                 chicken.stop = true;
+                rat.stop = true;
+                canvas.remove(chicken.chicken)
+                canvas.remove(rat.rat)
+                for(var i = 0; i< containers.length; i++){
+                    var currentContainer = containers[i];
+                    canvas.remove(currentContainer.Container);
+                }
+
+                 var elScore = document.getElementById('scoreValue');
+                score = 0
+                elScore.textContent=0;
+
+
+                //intervallen stop zetten
+                clearInterval(createContainerInterval);
+                clearInterval(monitorGameInterval);
+
+
+
+                btnStart.disabled = false;
+
+                btnStop.disabled = true;
+            });
     
     
 //Helpers

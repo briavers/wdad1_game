@@ -12,30 +12,29 @@ html{
 }
 
 body{
-    background: url(../img/bg.jpg) no-repeat center center;
+    background: url(../img/magellanic-clouds.png) no-repeat center center;
     background-size: cover;
     color: #FFF;
     text-align: center;
 }
 
 #barn {
-    width: 700px;
-    height: 500px;
+    width: 900px;
+    height: 800px;
     margin: auto;
-    background: url(../img/barn.jpg) no-repeat center center;
-    background-size: cover;
-    border: 5px solid yellow;
+
+    border: 5px solid grey;
     position: relative;
     
 }
 #barn .cock {
     position: absolute;
-    right: 0;
-    top: -100px;
-    background: url(../img/cock.png) no-repeat center center;
+    right: -60px;
+    top: -120px;
+    background: url(../img/soldier.png) no-repeat center center;
     background-size: contain;
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
 }
 .hiddenImages{
     width: 1px;

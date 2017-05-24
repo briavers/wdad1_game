@@ -38,7 +38,7 @@ var Chicken = function(c, left, top, element){
     this.stop = false;
     
     this.size = {
-        width: 100,
+        width: 90,
         height: 155
     }
     this.position = {
@@ -54,7 +54,7 @@ var Chicken = function(c, left, top, element){
             left: t.position.left,
             top: t.position.top,
             originX: 'center',
-            originY: 'bottom'
+            originY: 'top'
         });
         
         
@@ -65,16 +65,16 @@ var Chicken = function(c, left, top, element){
 
     this.wobble = function(angle) {
         t.chicken.animate('angle', angle,{
-            duration: 1000,
+            duration: 3000,
             onChange: c.renderAll.bind(c),
             onComplete: function(){
                 if(!t.stop){
                     
-                    if (angle == 10){
+                    if (angle == 5){
                        
-                        t.wobble(-10)
+                        t.wobble(-5)
                     } else{
-                        t.wobble(10)
+                        t.wobble(5)
                     }
                 }
             },
@@ -89,8 +89,8 @@ var Basket = function(c, element){
     this.basket = null;
     this.element = element;
     this.size = {
-        width: 100,
-        height: 53
+        width: 200,
+        height: 100
     }
     this.position = {
         left: c.width/2,
@@ -126,7 +126,7 @@ var Rat = function(c, element){
         height: 77
     }
     this.position = {
-        top: 130,
+        top: 260,
         left: 650
     }
     
@@ -147,7 +147,7 @@ var Rat = function(c, element){
 
     this.run = function(newPosition){
        t.rat.animate('left', newPosition, {
-            duration: 4000,
+            duration: 2000,
            // onChange: c.renderAll.bind(c),
             onComplete: function(){
             if(!t.stop){
@@ -176,15 +176,11 @@ var Rat = function(c, element){
 		random = Math.random() * 600 + 50;
 	} while (random > 300 && random < 400)
 
-var Egg = function(c) {
+var Container = function(c, element) {
 	var t = this;
-	this.egg = null;
+	this.container = null;
     this.hasFallen = false
-
-	this.size = {
-		rX: 25,
-		rY: 18
-	}
+    this.element = element;
 
 	var random;
 
@@ -194,30 +190,29 @@ var Egg = function(c) {
 
 
 	this.draw = function() {
-		this.egg = new fabric.Ellipse({
-	        left: 350,
-	        top: 115,
-	        originX: 'center',
-	        originY: 'center',
-	        rx: t.size.rX,
-	        ry: t.size.rY,
-	        fill: '#ffe6ad',
-	        stroke:'#6b5b2a',
-	        strokeWidth: 1,
-	        selectable: false
-		});
-
-		c.add(t.egg);
-		t.egg.moveTo(-100);
+		  this.container = new fabric.Image(t.element, {
+            width: 20,
+            height: 30,
+            left: 350,
+            top: 50,
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+           
+            
+        });
+            
+		c.add(t.container);
+		t.container.moveTo(100);
 	}
 
 	this.roll = function(rotation){
 
-var newAngle = t.egg.getAngle() + rotation;
+var newAngle = t.container.getAngle() + rotation;
 		//console.log(newAngle);
 
-		t.egg.animate('angle', newAngle, {
-			duration: 600,
+		t.container.animate('angle', newAngle, {
+			duration: 400,
  			//onChange: c.renderAll.bind(c),
  			onComplete: function(){
  				if(!t.fallen){
@@ -231,27 +226,34 @@ var newAngle = t.egg.getAngle() + rotation;
         
 	this.fall = function(){
 		
-		var distance = Math.abs(350 - random);
+		var distance = Math.abs(450 - random);
 
 		horizontal(random);
 
 		function horizontal(random){
-			t.egg.animate('left', random, {
-			duration: distance * 8,
+			t.container.animate('left', random, {
+			duration: 1000,
+			//onChange: c.renderAll.bind(c),
+			
+			});
+            t.container.animate('top', 200, {
+			duration: 1000,
 			//onChange: c.renderAll.bind(c),
 			onComplete : function(){
 					fall();
+                    //console.log("it should fal now")
 				}
 			});
 		};
 		function fall(){
-			t.egg.animate('top', 450, {
-			duration: 1000,
+			t.container.animate('top', 750, {
+			duration: 2000,
 			//onChange: c.renderAll.bind(c),
 			onComplete : function(){
-				c.remove(t.egg);
+				//c.remove(t.container);
                 t.hasFallen = true;
-                
+              //  console.log("it should be fallen now")
+               // canvas.remove(container.container);
 			}
 			});
 		}	
@@ -266,8 +268,8 @@ var Rocket = function(c, left, element){
     this.element = element;
     
     this.size = {
-        width: 23,
-        height: 100
+        width: 11,
+        height: 50
     }
     
     this.position = {
