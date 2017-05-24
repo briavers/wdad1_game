@@ -9,3 +9,6 @@
 
 Bugs: 
         one has to wait a few seconds between stop and start button
+        
+        can't remove current container
+        if on full screen mouse and ship different possition

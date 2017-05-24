@@ -172,9 +172,6 @@ var Rat = function(c, element){
 
 
 
-	do{
-		random = Math.random() * 600 + 50;
-	} while (random > 300 && random < 400)
 
 var Container = function(c, element) {
 	var t = this;
@@ -184,16 +181,16 @@ var Container = function(c, element) {
 
 	var random;
 
+
 	do{
-		random = Math.random() * 600 + 50;
-	} while (random > 300 && random < 400)
-
-
+		random = Math.random() * 1200 + 50;
+	} while (random > 600 && random < 800)
+        
 	this.draw = function() {
 		  this.container = new fabric.Image(t.element, {
             width: 20,
             height: 30,
-            left: 350,
+            left: 600,
             top: 50,
             originX: 'center',
             originY: 'center',
@@ -226,7 +223,7 @@ var newAngle = t.container.getAngle() + rotation;
         
 	this.fall = function(){
 		
-		var distance = Math.abs(450 - random);
+		var distance = Math.abs(1200 - random);
 
 		horizontal(random);
 
@@ -246,7 +243,7 @@ var newAngle = t.container.getAngle() + rotation;
 			});
 		};
 		function fall(){
-			t.container.animate('top', 750, {
+			t.container.animate('top', 850, {
 			duration: 2000,
 			//onChange: c.renderAll.bind(c),
 			onComplete : function(){
@@ -274,7 +271,7 @@ var Rocket = function(c, left, element){
     
     this.position = {
         left: left,
-        top: 640
+        top: 840
     }
 
     /* this.position = {

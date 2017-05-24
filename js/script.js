@@ -17,7 +17,7 @@ window.onload = function(){
     var elementChicken = document.getElementById('imgChicken');
     var elementRat = document.getElementById('imgRat')
     
-    var chicken = new Chicken(canvas, 450, -20, elementChicken);
+    var chicken = new Chicken(canvas, 600, -20, elementChicken);
 
     
    
@@ -44,24 +44,7 @@ window.onload = function(){
    
     
     
-    
-    canvas.on('mouse:down', shootRocket);
-    
-    function shootRocket(options) {
-        
-        var xPositionCursor = options.e.layerX;
-        //console.log(xPositionCursor)
-        var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
-        
-        
-        someRocket.draw()
-        someRocket.shoot() 
-        
-    
-        
-        
-    }
-    
+
    
     
     
@@ -135,7 +118,7 @@ function checkContainer(){
             canvas.remove(container.container);
             console.log("it should be removed now")
         }
-        if (y > 700 && container.hasFallen ==false){
+        if (y > 750 && container.hasFallen ==false){
             var basketPosition = someBasket.basket.left;
             var basketPadding = 50;
             
@@ -205,7 +188,7 @@ function checkContainer(){
     
 
 var radomLeft = randomXPosition();
-if (radomLeft > 250) someContainer.roll(180);
+if (radomLeft > 600) someContainer.roll(180);
     else someContainer.roll(-180);
     
     }
@@ -218,10 +201,27 @@ if (radomLeft > 250) someContainer.roll(180);
         chicken.wobble(10);
         rat.draw();
         rat.run(30);
+        
+        
         monitorGameInterval = setInterval(monitorGame, 50);
         
         
         createContainerInterval = setInterval(createContainers, 3000);
+        
+        
+        
+            
+        canvas.on('mouse:down', shootRocket);
+        function shootRocket(options) {
+        var xPositionCursor = options.e.layerX;
+        //console.log(xPositionCursor)
+        var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
+        someRocket.draw()
+        someRocket.shoot()  
+    }
+    
+        
+        
         
         
         
@@ -246,21 +246,26 @@ if (radomLeft > 250) someContainer.roll(180);
                 rat.stop = true;
                 canvas.remove(chicken.chicken)
                 canvas.remove(rat.rat)
+               // canvas.remove(currentContainer.container)
+                
+                
+                /*canvas.remove(container.someContainer)
+                canvas.remove(currentContainer.container)
                 for(var i = 0; i< containers.length; i++){
                     var currentContainer = containers[i];
-                    canvas.remove(currentContainer.Container);
+                    canvas.remove(currentContainer.container);
                 }
-
+*/
                  var elScore = document.getElementById('scoreValue');
                 score = 0
                 elScore.textContent=0;
-
+                console.log("stop test 1")
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
                 clearInterval(monitorGameInterval);
 
-
+console.log("stop test 2")
 
                 btnStart.disabled = false;
 

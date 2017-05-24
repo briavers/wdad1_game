@@ -16,17 +16,39 @@ body{
     background-size: cover;
     color: #FFF;
     text-align: center;
+
+}
+
+body h1{
+    margin-bottom: 5px;
+    margin-top: 10px
 }
 
 #barn {
-    width: 900px;
-    height: 800px;
+    width: 1200px;
+    height: 900px;
     margin: auto;
-
+    
     border: 5px solid grey;
     position: relative;
     
 }
+.scores {
+    
+    position: absolute;
+    right: -30%;
+    top: 155px;
+}
+
+.start_stop button{
+    width: 255px;
+    margin-bottom: 5px
+}
+.start_stop{
+    width: 255px;
+    
+}
+
 #barn .cock {
     position: absolute;
     right: -60px;
