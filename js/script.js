@@ -61,7 +61,8 @@ function monitorGame(){
     //cheack the eggs in basket
     checkContainer();
     checkRat();
-    checkHit();
+    checkRatHit();
+    checkCarrierHit();
 }
 
     
@@ -168,7 +169,7 @@ function checkContainer(){
     
     
     
-    function checkHit(){
+    function checkRatHit(){
          for(var i = 0; i<liveRockets.length; i++){
         var rocket = liveRockets[i];
         var x = rocket.rocket.left;
@@ -203,13 +204,46 @@ function checkContainer(){
     }
     }
     
+    
+    function checkCarrierHit(){
+        for(var i = 0; i<liveRockets.length; i++){
+        var rocket = liveRockets[i];
+        var x = rocket.rocket.left;
+        var y = rocket.rocket.top;
+        
+        if (y<25 && y>1){
+            var carierPosition = chicken.chicken.left;
+            var carierPadding = 120;
+            if((carierPosition - carierPadding) < x && x < (carierPosition + carierPadding)){
+                var btnStart = document.getElementById('btnStart');
+                var btnStop = document.getElementById('btnStop');
+                gameStatus = 'stop';
+                chicken.stop = true;
+                rat.stop = true;
+                canvas.remove(chicken.chicken)
+                canvas.remove(rat.rat)
+                var elScore = document.getElementById('scoreValue');
+                score = 0
+                elScore.textContent=0;
+                console.log("stop test 1");
+
+                //intervallen stop zetten
+                clearInterval(createContainerInterval);
+                clearInterval(monitorGameInterval);
+                
+                btnStart.disabled = false;
+                btnStop.disabled = true;
+                setTimeout(function(){ alert("you died!");  }, 50);
+            }
+        }
+    }
+    }
         
         
         
         
     
     var btnStart = document.getElementById('btnStart');
-    var btnPause = document.getElementById('btnPause');
     var btnStop = document.getElementById('btnStop');
     
     var gameStatus = 'start';
@@ -218,24 +252,17 @@ function checkContainer(){
     var canShoot = true
     
        var createContainers = function(){
-       var elementContainer = document.getElementById('imgContainer')
-		var someContainer = new Container(canvas, elementContainer);
-		someContainer.draw();
+            var elementContainer = document.getElementById('imgContainer')
+            var someContainer = new Container(canvas, elementContainer);
+            someContainer.draw();
+        	someContainer.fall();
+            containers.push(someContainer)
+            console.log(containers)
            
-           
-		someContainer.fall();
-            
-    containers.push(someContainer)
-	console.log(containers)
-
-    
-    
-
-var radomLeft = randomXPosition();
-if (radomLeft > 600) someContainer.roll(180);
-    else someContainer.roll(-180);
-    
-    }
+            var radomLeft = randomXPosition();
+            if (radomLeft > 600) someContainer.roll(180);
+            else someContainer.roll(-180);
+       }
     
     btnStart.addEventListener('click', function(){
         gameStatus = 'start';
@@ -248,35 +275,23 @@ if (radomLeft > 600) someContainer.roll(180);
        // canShoot = true;
         
         monitorGameInterval = setInterval(monitorGame, 50);
-        
-        
         createContainerInterval = setInterval(createContainers, 3000);
-        
-        
-        
-            
+        //shoot function 
         canvas.on('mouse:down', shootRocket);
-        
-        
         function shootRocket(options) {
             if(canShoot){
-        var xPositionCursor = options.e.layerX;
+                var xPositionCursor = options.e.layerX;
         //console.log(xPositionCursor)
-        var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
-        someRocket.draw()
-        someRocket.shoot()  
-        liveRockets.push(someRocket)
-        canShoot = false;
-    }else{
+                var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
+                someRocket.draw()
+                someRocket.shoot()  
+                liveRockets.push(someRocket)
+                canShoot = false;
+            }else{
         console.log("can't shoot FU GAME")
-    }
+            }
         }
-        
-        
-        
-        
         btnStart.disabled = true;
-       
         btnStop.disabled = false;
     });
     
