@@ -261,6 +261,7 @@ var Rocket = function(c, left, element){
     var t = this
     this.rocket = null;
     this.element = element;
+    this.hasHit = false;
     
     this.size = {
         width: 11,
@@ -282,8 +283,8 @@ var Rocket = function(c, left, element){
         
         
         this.rocket = new fabric.Image(t.element,{
-            width: t.size.width,
-            height: t.size.height,
+            width: 11,
+            height: 50,
             left: t.position.left,
             top: t.position.top,
             originX: 'center',
@@ -299,6 +300,7 @@ var Rocket = function(c, left, element){
             duration: 750,
             onComlete : function(){
             c.remove(t.rocket);
+            
         } 
         });
     } 

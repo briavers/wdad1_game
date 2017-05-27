@@ -20,7 +20,7 @@ window.onload = function(){
     var chicken = new Chicken(canvas, 600, -20, elementChicken);
 
     
-   
+   var canShoot
     var elementBasket = document.getElementById('imgBasket');
     
     
@@ -34,8 +34,7 @@ window.onload = function(){
         return xPositionCursor
     }
     
-    
-   
+     
     
     
     var elementRocket = document.getElementById('imgRocket')
@@ -54,6 +53,7 @@ window.onload = function(){
     var rat = new Rat(canvas, elementRat);
 
     var containers = []
+    var liveRockets = []
     
 //functionality to check on eggs & rat
 
@@ -61,6 +61,7 @@ function monitorGame(){
     //cheack the eggs in basket
     checkContainer();
     checkRat();
+    checkHit();
 }
 
     
@@ -103,7 +104,7 @@ function checkContainer(){
             //romove from erray
             containers.splice(i, 1)
             canvas.remove(container.container);
-            console.log("it should be removed now")
+            //console.log("it should be removed now")
         }
         if (y > 750 && container.hasFallen ==false){
             var basketPosition = someBasket.basket.left;
@@ -127,7 +128,7 @@ function checkContainer(){
     function checkRat(){
     for(var i = 0; i < containers.length; i++){
         var container = containers[i];
-        
+
         var x = container.container.left;
         var y = container.container.top;
        // console.log(y)
@@ -146,10 +147,66 @@ function checkContainer(){
             };
             
         };
-                
+        
+/*
+        if (rat.hasHit){
+            
+            elementRat.style.webkitAnimationPlayState="paused";
+            
+            //console.log('rat should be gone')
+            function respawnRat(){
+                setTimeout(function(){
+                    rat.draw();
+                    console.log('rat should respawn')
+                }, 3000);
+            }
+            
+        }*/
+              
             };
         };
-  
+    
+    
+    
+    function checkHit(){
+         for(var i = 0; i<liveRockets.length; i++){
+        var rocket = liveRockets[i];
+        var x = rocket.rocket.left;
+        var y = rocket.rocket.top;
+         
+         
+             
+        if (y>200 && y<250){
+            var ratPosition = rat.rat.left;
+            var ratPadding = 80;
+            
+            if((ratPosition - ratPadding) < x && x < (ratPosition + ratPadding)){
+                rat.hasHit = true;
+                canvas.remove(rat.rat);
+               // elementRat.style.webkitAnimationPlayState="paused";
+                
+                
+                liveRockets.splice(i, 1)
+                console.log("rat was hit")
+                setTimeout(function(){ rat.draw();  }, 3000);
+                setTimeout(function(){ canShoot = true;  }, 5000);
+                
+        }
+        }
+        if (y<0){
+            
+            liveRockets.splice(i, 1)
+            console.log("you missed")
+            setTimeout(function(){ canShoot = true;  }, 1);
+            
+        }
+    }
+    }
+    
+        
+        
+        
+        
     
     var btnStart = document.getElementById('btnStart');
     var btnPause = document.getElementById('btnPause');
@@ -158,7 +215,7 @@ function checkContainer(){
     var gameStatus = 'start';
     var createContainerInterval;
     var monitorGameInterval;
-    
+    var canShoot = true
     
        var createContainers = function(){
        var elementContainer = document.getElementById('imgContainer')
@@ -188,7 +245,7 @@ if (radomLeft > 600) someContainer.roll(180);
         chicken.wobble(10);
         rat.draw();
         rat.run(30);
-        
+       // canShoot = true;
         
         monitorGameInterval = setInterval(monitorGame, 50);
         
@@ -199,15 +256,21 @@ if (radomLeft > 600) someContainer.roll(180);
         
             
         canvas.on('mouse:down', shootRocket);
+        
+        
         function shootRocket(options) {
+            if(canShoot){
         var xPositionCursor = options.e.layerX;
         //console.log(xPositionCursor)
         var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
         someRocket.draw()
         someRocket.shoot()  
+        liveRockets.push(someRocket)
+        canShoot = false;
+    }else{
+        console.log("can't shoot FU GAME")
     }
-    
-        
+        }
         
         
         
