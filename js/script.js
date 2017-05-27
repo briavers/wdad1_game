@@ -51,22 +51,9 @@ window.onload = function(){
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     var rat = new Rat(canvas, elementRat);
 
     var containers = []
-    
-
-    
     
 //functionality to check on eggs & rat
 

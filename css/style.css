@@ -41,8 +41,9 @@ body h1{
 }
 
 .start_stop button{
-    width: 255px;
     margin-bottom: 5px
+    width: 255px;
+    
 }
 .start_stop{
     width: 255px;

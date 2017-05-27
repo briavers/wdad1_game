@@ -112,8 +112,6 @@ var Basket = function(c, element){
     };
 }
 
-
-
 //RAT
 
 var Rat = function(c, element){
