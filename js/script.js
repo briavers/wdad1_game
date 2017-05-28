@@ -44,7 +44,7 @@ window.onload = function(){
     var someRocket = new Rocket(canvas, elementRocket);
     
     var pirate = new Pirate(canvas, elementPirate);
-
+    
     var containers = []
     var liveRockets = []
     var liveBadRockets = []
@@ -52,7 +52,49 @@ window.onload = function(){
     
     
     
+     //starting of att easy amounts
     
+    if (pirateSpeed == 0){
+        console.info('piratespeed was 0')
+        pirateSpeed = 2000;
+        rocketWait = 1;
+        enemyRocketsSpeed = 1200;
+        containerAmountSpeed = 2000;
+        enemyArmyAmounth = 0;
+        badRocketSalvo = 3500;}
+    
+    
+             //settings change ingame 
+    var fldSelect = document.getElementById('level')
+    fldSelect.addEventListener('change', changeDificulty)
+       function changeDificulty(){
+    // get selected index 
+    var difficultySelectIndex = document.getElementById("level").selectedIndex;
+    var jSonPath = document.getElementsByTagName("option")[difficultySelectIndex].value; 
+    
+    // get the json file
+    fetchJSONFile(jSonPath, function(data){
+        // json file is loaded
+
+        // get the settings object
+       var settings = data.settingsJSon;
+        
+       // 2 possible settings; speed & rocketwait
+       pirateSpeed = settings.enemySpeed;
+       rocketWait = settings.rocketWait;
+        containerAmountSpeed += settings.containerAmounth;
+       enemyRocketsSpeed = settings.enemyRocketSpeed;
+        enemyArmyAmounth = settings.enemyArmy;
+        badRocketSalvo = settings.enemyRocketSalvo;
+        return pirateSpeed
+        return rocketWait
+        return enemyRocketsSpeed
+        return enemyArmyAmounth
+        return badRocketSalvo
+    
+       
+    });
+       } 
     /*
     var actualLevel
     
@@ -66,28 +108,16 @@ window.onload = function(){
     
     */
     
-    
-    
-    //settings change ingame 
-    
-    function fetchJSONFile(path, callback) {
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = function() {
-        if (httpRequest.readyState === 4) {
-            if (httpRequest.status === 200) {
-                var data = JSON.parse(httpRequest.responseText);
-                if (callback) callback(data);
-            }
-        }
-    };
-    httpRequest.open('GET', path);
-    httpRequest.send(); 
-    
-}
+    var pirateSpeed = 0;
+    var rocketWait = 0;
+    var enemyRocketsSpeed = 0;
+    var containerAmountSpeed = 0;
+    var enemyArmyAmounth = 0;
+    var badRocketSalvo = 0;
+   
+
     
 
-// this requests the file and executes a callback with the parsed result once
-//   it is available
 
 
     
@@ -195,7 +225,6 @@ function checkContainer(){
             };
             
         };
-
             };
         };
     
@@ -223,20 +252,22 @@ function checkContainer(){
                 
                 setTimeout(function(){ 
                     pirate.draw(); 
-                     do{badRocketsRandom = Math.random() * 1700 + 10;
-                    } while (badRocketsRandom > 2500 && badRocketsRandom < 3500)        
-        createBadRocketsInterval = setInterval(createBadRockets, badRocketsRandom)
-        }, 3000);
-                setTimeout(function(){ canShoot = true;  }, 5000);
+                    do{badRocketsRandom = Math.random() * 3500 + 10;
+            } while (badRocketsRandom > badRocketSalvo && badRocketsRandom < (badRocketSalvo + 1000) )
+                
+               // console.log(badRocketsRandom)
+                
+                setTimeout(function(){ canShoot = true;  }, (5000 + rocketWait));
                 clearInterval(createBadRocketsInterval);
                 
-        }
+                }, 1500);
+            }
         }
         if (y<0){
             
             liveRockets.splice(i, 1)
             
-            setTimeout(function(){ canShoot = true;  }, 1);
+            setTimeout(function(){ canShoot = true;  }, rocketWait);
             
         }
     }
@@ -263,6 +294,8 @@ function checkContainer(){
                 }
                 canvas.remove(carrier.carrier)
                 canvas.remove(pirate.pirate)
+           
+                
                 var elScore = document.getElementById('scoreValue');
                 score = 0
                 elScore.textContent=0;
@@ -275,7 +308,7 @@ function checkContainer(){
                 clearInterval(createContainerInterval);
                 clearInterval(createBadRocketsInterval);
                 clearInterval(monitorGameInterval);
-                
+
                 btnStart.disabled = false;
                 btnStop.disabled = true;
                 setTimeout(function(){ alert("you died!");  }, 50);
@@ -295,11 +328,15 @@ function checkContainer(){
                 gameStatus = 'stop';
                 carrier.stop = true;
                 pirate.stop = true;
+                
                 if (score > highscore) {localStorage.setItem('highscore', score);      
                 }else{localStorage.setItem("highscore", score);
                 }
                 canvas.remove(carrier.carrier)
                 canvas.remove(pirate.pirate)
+                   
+               
+        
                 var elScore = document.getElementById('scoreValue');
                 score = 0
                 elScore.textContent=0;
@@ -313,9 +350,12 @@ function checkContainer(){
                 clearInterval(createBadRocketsInterval);
                 clearInterval(monitorGameInterval);
                 
+
                 btnStart.disabled = false;
                 btnStop.disabled = true;
                 setTimeout(function(){ alert("you died!");  }, 50);
+        
+    
             
         
     }
@@ -332,9 +372,12 @@ function checkContainer(){
                 if((playerPosition - playerPadding) < x && x < (playerPosition + playerPadding)){
                 lives--;
                 elLives.textContent=lives; }
+                canvas.remove(badRocket.badRocket)
+          
+        }
+        if (y>900){
             canvas.remove(badRocket.badRocket)
         }
-        
             
         }
             
@@ -346,7 +389,7 @@ function checkContainer(){
     
     var btnStart = document.getElementById('btnStart');
     var btnStop = document.getElementById('btnStop');
-    
+    var btnHelp = document.getElementById('btnHelp');
     var gameStatus = 'start';
     var createContainerInterval;
     var monitorGameInterval;
@@ -370,7 +413,7 @@ function checkContainer(){
             var elementBadRocket = document.getElementById('imgBadRocket')
             var someBadRocket = new BadRocket(canvas, piratePosition, elementBadRocket)
             someBadRocket.draw();
-            someBadRocket.badShoot();
+            someBadRocket.badShoot(enemyRocketsSpeed);
            liveBadRockets.push(someBadRocket)
 
        }
@@ -378,15 +421,29 @@ function checkContainer(){
        
        
     btnStart.addEventListener('click', function(){
+             
+    if (pirateSpeed == 0){
+        console.info('piratespeed was 0')
+        pirateSpeed = 2000;
+        rocketWait = 1;
+        enemyRocketsSpeed = 1200;
+        containerAmountSpeed = 2000;
+        enemyArmyAmounth = 0;
+        badRocketSalvo = 3500;}
+        
         gameStatus = 'start';
         carrier.stop = false;
         pirate.stop = false;
+        
         carrier.draw();
         carrier.wobble(10);
         pirate.draw();
-        pirate.run(30);
         
         
+        pirate.run(30, pirateSpeed);
+         console.log(pirateSpeed)
+      
+
         //level();
          //console.log(actualLevel)
        // canShoot = true;
@@ -396,7 +453,8 @@ function checkContainer(){
         createContainerInterval = setInterval(createContainers, 3000);
         
             do{badRocketsRandom = Math.random() * 3500 + 1500;
-            } while (badRocketsRandom > 2500 && badRocketsRandom < 3500)
+            } while (badRocketsRandom > badRocketSalvo && badRocketsRandom < (badRocketSalvo + 1000) )
+                
         
         createBadRocketsInterval = setInterval(createBadRockets, badRocketsRandom)
         
@@ -413,16 +471,23 @@ function checkContainer(){
                 liveRockets.push(someRocket)
                 canShoot = false;
             }else{
-        console.info("can't shoot FU GAME")
+        
             }
         }
         btnStart.disabled = true;
         btnStop.disabled = false;
+        btnHelp.disabled = true;
+        
+        
+        
+   
     });
     
     
     
-    
+
+   
+
 
     
     
@@ -436,12 +501,14 @@ function checkContainer(){
                 pirate.stop = true;
                 canvas.remove(carrier.carrier)
                 canvas.remove(pirate.pirate)
+
+
                // canvas.remove(currentContainer.container)
                 
                 if (score > highscore) {localStorage.setItem('highscore', score);      
                 }else{localStorage.setItem("highscore", score);
                 }
-               
+
                 
                 /*canvas.remove(container.someContainer)
                 canvas.remove(currentContainer.container)
@@ -465,14 +532,30 @@ function checkContainer(){
                 clearInterval(createBadRocketsInterval);
         
 
-
             
 
                 btnStart.disabled = false;
-
+                btnHelp.disabled = false;
                 btnStop.disabled = true;
             });
     
+    
+    btnHelp.addEventListener('click', function(){
+        
+        
+        swal({
+  title: "Basic info!",
+  text: "move by moving the mouse, click to shoot the rockets. evade enemy rockets and don't shoot the carier. <br> try to collect as manny containers as possible, there are 3 levels, easy medium and hard; <br> Easy makes you live easy, slow enemy slow enemy rockets many containers  <br> Medium gives a regualar gameplay with normal speed <br> Hard adds to enemy rocket speed, and adds another enemy ship luckily that one can not shoot  <br> <em> hint: there is a cooldown between rockets you can fire, choose wisely<em>",
+  html: true
+});
+        /*
+        swal("basic info", "move by moving the mouse, click to shoot the rockets. evade enemy rockets and don't shoot the carier. <br> try to collect as manny containers as possible, there are 3 levels, easy medium and hard; <br> Easy makes you live easy, slow enemy slow enemy rockets many containers  <br> Medium gives a regualar gameplay with normal speed <br> Hard adds to enemy rocket speed, and adds another enemy ship luckily that one can not shoot  <br> hint: there is a cooldown between rockets you can fire, choose wisely")
+       */ 
+        
+        btnStart.disabled = false;
+        btnHelp.disabled = false;
+        btnStop.disabled = true; 
+    });
     
 //Helpers
     function randomXPosition(){
@@ -481,7 +564,22 @@ function checkContainer(){
         return Math.floor(Math.random()*max-min+1)+min;
     }
     
+    
+    
+    function fetchJSONFile(path, callback) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState === 4) {
+                if (httpRequest.status === 200) {
+                    var data = JSON.parse(httpRequest.responseText);
 
+                    if (callback) callback(data);
+                }
+            }
+        };
+        httpRequest.open('GET', path);
+        httpRequest.send(); 
+    }
     
     
     

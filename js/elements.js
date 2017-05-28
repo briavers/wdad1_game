@@ -143,20 +143,20 @@ var Pirate = function(c, element){
     };
 
 
-    this.run = function(newPosition){
+    this.run = function(newPosition, pirateSpeed){
        t.pirate.animate('left', newPosition, {
-            duration: 2000,
+           duration: pirateSpeed,
            // onChange: c.renderAll.bind(c),
             onComplete: function(){
             if(!t.stop){
                 //console.log(newPosition)
                 if(newPosition == 30){
-                  //  console.log(newPosition)
-                    t.run(c.width-30);
+                  // console.log(newPosition)
+                    t.run(c.width-30, pirateSpeed);
                     t.pirate.set('flipX', true);
                 } else{
                    // console.log(newPosition + " 3")
-                    t.run(30);
+                    t.run(30, pirateSpeed);
                     t.pirate.set('flipX', false);
                 }
             }
@@ -166,8 +166,6 @@ var Pirate = function(c, element){
 };
 
 }
-
-
 
 
 
@@ -325,8 +323,8 @@ var BadRocket = function(c, left, element){
     
     this.draw = function(){
         this.badRocket = new fabric.Image(t.element,{
-            width: 6,
-            height: 25,
+            width: 8,
+            height: 40,
             left: t.position.left,
             top: 260,
             originX: 'center',
@@ -336,9 +334,9 @@ var BadRocket = function(c, left, element){
         
         c.add(t.badRocket);
     };
-      this.badShoot = function(){
+      this.badShoot = function(enemyRocketsSpeed){
         t.badRocket.animate('top', 950,{
-            duration: 750,
+            duration: enemyRocketsSpeed,
             onComlete : function(){
             c.remove(t.badRocket);
             
