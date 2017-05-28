@@ -254,6 +254,96 @@ var newAngle = t.container.getAngle() + rotation;
     
 }
 
+
+var Tnt = function(c, element) {
+	var t = this;
+	this.tnt = null;
+    this.hasFallen = false
+    this.element = element;
+
+	var random;
+
+
+	
+	do{
+		random = Math.random() * 1200 + 50;
+	} while (random > 600 && random < 800)
+        
+	this.draw = function() {
+		  this.tnt = new fabric.Image(t.element, {
+            width: 20,
+            height: 30,
+            left: 600,
+            top: 50,
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+           
+            
+        });
+            
+		c.add(t.tnt);
+		t.tnt.moveTo(100);
+	}
+
+	this.roll = function(rotation){
+
+var newAngle = t.tnt.getAngle() + rotation;
+		//console.log(newAngle);
+
+		t.tnt.animate('angle', newAngle, {
+			duration: 350,
+ 			//onChange: c.renderAll.bind(c),
+ 			onComplete: function(){
+ 				if(!t.fallen){
+ 					t.roll(rotation);
+ 				}
+ 			},
+ 	 		easing: fabric.util.ease['easeInOutQuad']
+		});
+    }
+        
+        
+	this.fall = function(){
+		
+		var distance = Math.abs(1200 - random);
+
+		horizontal(random);
+
+		function horizontal(random){
+			t.tnt.animate('left', random, {
+			duration: 1000,
+			//onChange: c.renderAll.bind(c),
+			
+			});
+            t.tnt.animate('top', 200, {
+			duration: 1000,
+			//onChange: c.renderAll.bind(c),
+			onComplete : function(){
+					fall();
+                    //console.log("it should fal now")
+				}
+			});
+		};
+		function fall(){
+			t.tnt.animate('top', 850, {
+			duration: 2000,
+			//onChange: c.renderAll.bind(c),
+			onComplete : function(){
+				//c.remove(t.container);
+                t.hasFallen = true;
+              //  console.log("it should be fallen now")
+               // canvas.remove(container.container);
+			}
+			});
+		}	
+	}
+    
+}
+
+
+
+
 var Rocket = function(c, left, element){
     
     var t = this

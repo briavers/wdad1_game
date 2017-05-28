@@ -11,23 +11,15 @@ uitberijdingen:
 - timer tussen racketten schieten
 - higscore
 - bij stop of verlies word score tot 0 gereset (high score blijft)
--levels (menu is al geplaatst in html )
+-levels
              - gemakelijk : tragere vijandelijke racketen en tragere vijand, groter raakopvervlak vijand, meer containers.
              - normaal : gewoonlijke snelheid, en aantal racketen
              - moeilijk: alles gaat sneller
+- gepersonaliseerd alert venster + help butten die info kan geven
+- TNT drops --> bij vangst leven --
 
-geplande uitberijdingen:
 
-- power ups : 
-             - Magnets
-             - extra live 
-- gepersonaliseerd alert venster
-- help butten die info kan geven
-
-stretch goas:
-             -racketen vliegen diagonaal richting speler
-             
-             
              
 Known Issues: 
-             - false hits (te wijte aan foutieve padding vermoedelijk)
+             - false hits (te wijte aan schermresolutie misschien)
+             - someBadRockets kan in overdrive gaan  

@@ -45,6 +45,7 @@ window.onload = function(){
     
     var pirate = new Pirate(canvas, elementPirate);
     
+    var tnts = []
     var containers = []
     var liveRockets = []
     var liveBadRockets = []
@@ -133,6 +134,7 @@ window.onload = function(){
 function monitorGame(){
     //cheack the eggs in player
     checkContainer();
+    checkTnt();
     checkPirate();
     checkPirateHit();
     checkCarrierHit();
@@ -199,7 +201,38 @@ function checkContainer(){
     }
     
 }
-    
+    function checkTnt(){
+        console.info("Check TNT function")
+        for(var i = 0; i<tnts.length; i++){
+            var tnt = tnts[i];
+
+            var x = tnt.tnt.left;
+            var y = tnt.tnt.top;
+
+
+            if (tnt.hasFallen){
+                console.info("tnt has fallen")
+                //romove from erray
+                tnts.splice(i, 1)
+                canvas.remove(tnt.tnt);
+
+            }
+            if (y > 750 && tnt.hasFallen ==false){
+                console.info("tnt check if tnt is catched")
+                var playerPosition = somePlayer.player.left;
+                var playerPadding = 50;
+
+                if((playerPosition - playerPadding)< x && x< (playerPosition + playerPadding)){
+                    tnt.hasFallen = true;
+                    lives--;
+                    elLives.textContent=lives;
+                    canvas.remove(tnt.tnt);
+
+                }
+            }
+        }
+
+    } 
     
     
     
@@ -306,12 +339,13 @@ function checkContainer(){
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
+                clearInterval(createTntInterval);
                 clearInterval(createBadRocketsInterval);
                 clearInterval(monitorGameInterval);
 
                 btnStart.disabled = false;
                 btnStop.disabled = true;
-                setTimeout(function(){ alert("you died!");  }, 50);
+                setTimeout(function(){ swal("carrier destroyed", "look where you fire", "error");;  }, 50);
             }
         }
     }
@@ -347,13 +381,14 @@ function checkContainer(){
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
+                clearInterval(createTntInterval);
                 clearInterval(createBadRocketsInterval);
                 clearInterval(monitorGameInterval);
                 
 
                 btnStart.disabled = false;
                 btnStop.disabled = true;
-                setTimeout(function(){ alert("you died!");  }, 50);
+                setTimeout(function(){ swal("you died", "whats out for the enemy rockets", "error");;  }, 50);
         
     
             
@@ -408,6 +443,18 @@ function checkContainer(){
             else someContainer.roll(-180);
        }
        
+       var createTnt = function(){
+            var elementTnt = document.getElementById('imgTnt')
+            var someTnt = new Tnt(canvas, elementTnt);
+            someTnt.draw();
+        	someTnt.fall();
+            tnts.push(someTnt)
+         
+            var radomLeft = randomXPosition();
+            if (radomLeft > 600) someTnt.roll(180);
+            else someTnt.roll(-180);
+       }
+       
        var createBadRockets = function(){
            var piratePosition = pirate.pirate.left;
             var elementBadRocket = document.getElementById('imgBadRocket')
@@ -450,7 +497,8 @@ function checkContainer(){
         
         monitorGameInterval = setInterval(monitorGame, 50);
         
-        createContainerInterval = setInterval(createContainers, 3000);
+        createContainerInterval = setInterval(createContainers, containerAmountSpeed);
+        createTntInterval = setInterval(createTnt, (containerAmountSpeed+ 8253));
         
             do{badRocketsRandom = Math.random() * 3500 + 1500;
             } while (badRocketsRandom > badRocketSalvo && badRocketsRandom < (badRocketSalvo + 1000) )
@@ -528,6 +576,7 @@ function checkContainer(){
                 elHScore.textContent = highscore
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
+                clearInterval(createTntInterval);
                 clearInterval(monitorGameInterval);
                 clearInterval(createBadRocketsInterval);
         
