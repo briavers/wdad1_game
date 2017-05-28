@@ -31,9 +31,9 @@ var Plank = function(c, top, fill){
 
 
 
-var Chicken = function(c, left, top, element){
+var Carrier = function(c, left, top, element){
     var t = this
-    this.chicken = null;
+    this.carrier = null;
     this.element = element;
     this.stop = false;
     
@@ -45,10 +45,10 @@ var Chicken = function(c, left, top, element){
         left: left,
         top: top
     }
-    t.chicken = null;
+    t.carrier = null;
     
     this.draw = function() {
-        t.chicken = new fabric.Image(t.element, {
+        t.carrier = new fabric.Image(t.element, {
             width: t.size.width,
             height: t.size.height,
             left: t.position.left,
@@ -58,13 +58,13 @@ var Chicken = function(c, left, top, element){
         });
         
         
-        t.chicken.selectable = false;
-        c.add(t.chicken);
-        t.chicken.moveTo(100)
+        t.carrier.selectable = false;
+        c.add(t.carrier);
+        t.carrier.moveTo(100)
     };
 
     this.wobble = function(angle) {
-        t.chicken.animate('angle', angle,{
+        t.carrier.animate('angle', angle,{
             duration: 3000,
             onChange: c.renderAll.bind(c),
             onComplete: function(){
@@ -84,9 +84,9 @@ var Chicken = function(c, left, top, element){
 }
     
     
-var Basket = function(c, element){
+var Player = function(c, element){
     var t = this
-    this.basket = null;
+    this.player = null;
     this.element = element;
     this.size = {
         width: 200,
@@ -98,7 +98,7 @@ var Basket = function(c, element){
     }
     
     this.draw = function() {
-        t.basket = new fabric.Image(t.element, {
+        t.player = new fabric.Image(t.element, {
             width: t.size.width,
             height: t.size.height,
             left: t.position.left,
@@ -108,15 +108,15 @@ var Basket = function(c, element){
             selectable: false
         });
         
-        c.add(t.basket);
+        c.add(t.player);
     };
 }
 
 //RAT
 
-var Rat = function(c, element){
+var Pirate = function(c, element){
     var t = this
-    this.rat = null;
+    this.pirate = null;
     this.element = element;
     this.stop = false;
     this.size = {
@@ -129,7 +129,7 @@ var Rat = function(c, element){
     }
     
     this.draw = function() {
-        t.rat = new fabric.Image(t.element, {
+        t.pirate = new fabric.Image(t.element, {
             width: t.size.width,
             height: t.size.height,
             left: t.position.left,
@@ -139,12 +139,12 @@ var Rat = function(c, element){
             selectable: false
         });
         
-        c.add(t.rat);
+        c.add(t.pirate);
     };
 
 
     this.run = function(newPosition){
-       t.rat.animate('left', newPosition, {
+       t.pirate.animate('left', newPosition, {
             duration: 2000,
            // onChange: c.renderAll.bind(c),
             onComplete: function(){
@@ -153,11 +153,11 @@ var Rat = function(c, element){
                 if(newPosition == 30){
                   //  console.log(newPosition)
                     t.run(c.width-30);
-                    t.rat.set('flipX', true);
+                    t.pirate.set('flipX', true);
                 } else{
                    // console.log(newPosition + " 3")
                     t.run(30);
-                    t.rat.set('flipX', false);
+                    t.pirate.set('flipX', false);
                 }
             }
             },
@@ -307,6 +307,45 @@ var Rocket = function(c, left, element){
     
     
     }
+
+
+var BadRocket = function(c, left, element){
+    var t = this
+    this.badRocket = null;
+    this.element = element;
+    this.hasKilled = false;
+      this.size = {
+        width: 6,
+        height: 25
+    }
+     this.position = {
+        left: left,
+        top: 260
+    }
+    
+    this.draw = function(){
+        this.badRocket = new fabric.Image(t.element,{
+            width: 6,
+            height: 25,
+            left: t.position.left,
+            top: 260,
+            originX: 'center',
+            originY: 'bottom',
+            selectable: false
+        });
+        
+        c.add(t.badRocket);
+    };
+      this.badShoot = function(){
+        t.badRocket.animate('top', 950,{
+            duration: 750,
+            onComlete : function(){
+            c.remove(t.badRocket);
+            
+        } 
+        });
+    } 
+}
     
 
 

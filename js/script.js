@@ -14,23 +14,26 @@ window.onload = function(){
     var plank = new Plank(canvas, 130, '#FFFF00');
     plank.draw();
     
-    var elementChicken = document.getElementById('imgChicken');
-    var elementRat = document.getElementById('imgRat')
+    var elementCarrier = document.getElementById('imgCarrier');
+    var elementPirate = document.getElementById('imgPirate')
     
-    var chicken = new Chicken(canvas, 600, -20, elementChicken);
+    var carrier = new Carrier(canvas, 600, -20, elementCarrier);
 
     
    var canShoot
-    var elementBasket = document.getElementById('imgBasket');
+    var elementPlayer = document.getElementById('imgPlayer');
     
     
     
-    var someBasket = new Basket(canvas, elementBasket);
-    someBasket.draw();
-    canvas.on('mouse:move', moveBasket);
-    function moveBasket(options) {
+    
+    
+    
+    var somePlayer = new Player(canvas, elementPlayer);
+    somePlayer.draw();
+    canvas.on('mouse:move', movePlayer);
+    function movePlayer(options) {
         var xPositionCursor = options.e.layerX;
-        someBasket.basket.left = xPositionCursor;
+        somePlayer.player.left = xPositionCursor;
         return xPositionCursor
     }
     
@@ -40,29 +43,71 @@ window.onload = function(){
     var elementRocket = document.getElementById('imgRocket')
     var someRocket = new Rocket(canvas, elementRocket);
     
-   
-    
-    
-
-   
-    
-    
-    
-    
-    
-    var rat = new Rat(canvas, elementRat);
+    var pirate = new Pirate(canvas, elementPirate);
 
     var containers = []
     var liveRockets = []
+    var liveBadRockets = []
     
-//functionality to check on eggs & rat
+    
+    
+    
+    
+    /*
+    var actualLevel
+    
+    
+    function level() {
+    var levelId = document.getElementById("styles").selectedIndex;
+    var actualLevel = document.getElementsByTagName("option")[levelId].value; 
+    return actualLevel;
+}
+  
+    
+    */
+    
+    
+    
+    //settings change ingame 
+    
+    function fetchJSONFile(path, callback) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                var data = JSON.parse(httpRequest.responseText);
+                if (callback) callback(data);
+            }
+        }
+    };
+    httpRequest.open('GET', path);
+    httpRequest.send(); 
+    
+}
+    
+
+// this requests the file and executes a callback with the parsed result once
+//   it is available
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+//functionality to check on eggs & pirate
 
 function monitorGame(){
-    //cheack the eggs in basket
+    //cheack the eggs in player
     checkContainer();
-    checkRat();
-    checkRatHit();
+    checkPirate();
+    checkPirateHit();
     checkCarrierHit();
+    checkPlayerHit();
+    dead();
 }
 
     
@@ -70,20 +115,22 @@ function monitorGame(){
     
     
     var elScore = document.getElementById('scoreValue');
-    var elHScore = document.getElementById('hScoreValue')
+    var elHScore = document.getElementById('hScoreValue');
     var score = 0;
     elScore.textContent=score
     
+    
+    var elLives = document.getElementById('livesValue');
+    var lives = 3;
+    elLives.textContent = lives
+    
+    
   
-    var highscore = localStorage.getItem("highscore");
-    if(highscore !== null){
-    if (score > highscore) {
-        localStorage.setItem("highscore", score);      
-    }
-}
-else{
-    localStorage.setItem("highscore", score);
-}
+    
+    
+    var highscore = localStorage.getItem('highscore');
+    
+
     elHScore.textContent = highscore
     
     
@@ -93,7 +140,7 @@ else{
     
     
 function checkContainer(){
-    //console.log(eggs)
+  
     for(var i = 0; i<containers.length; i++){
         var container = containers[i];
         
@@ -105,13 +152,13 @@ function checkContainer(){
             //romove from erray
             containers.splice(i, 1)
             canvas.remove(container.container);
-            //console.log("it should be removed now")
+            
         }
         if (y > 750 && container.hasFallen ==false){
-            var basketPosition = someBasket.basket.left;
-            var basketPadding = 50;
+            var playerPosition = somePlayer.player.left;
+            var playerPadding = 50;
             
-            if((basketPosition - basketPadding)< x && x< (basketPosition + basketPadding)){
+            if((playerPosition - playerPadding)< x && x< (playerPosition + playerPadding)){
                 container.hasFallen = true;
                 score++;
                 elScore.textContent=score;
@@ -126,50 +173,35 @@ function checkContainer(){
     
     
     
-    function checkRat(){
+    function checkPirate(){
     for(var i = 0; i < containers.length; i++){
         var container = containers[i];
-
+       
         var x = container.container.left;
         var y = container.container.top;
-       // console.log(y)
+       
         
         if (y>200 && y<250){
-            var ratPosition = rat.rat.left;
-            var ratPadding = 55;
-           // console.log('test y==100')
+            var piratePosition = pirate.pirate.left;
+            var piratePadding = 55;
+          
             
             
-            if((ratPosition - ratPadding) < x && x < (ratPosition + ratPadding)){
+            if((piratePosition - piratePadding) < x && x < (piratePosition + piratePadding)){
                 container.hasFallen = true;
                 canvas.remove(container.container);
                 
-              //  console.log('rat position true')
+             
             };
             
         };
-        
-/*
-        if (rat.hasHit){
-            
-            elementRat.style.webkitAnimationPlayState="paused";
-            
-            //console.log('rat should be gone')
-            function respawnRat(){
-                setTimeout(function(){
-                    rat.draw();
-                    console.log('rat should respawn')
-                }, 3000);
-            }
-            
-        }*/
-              
+
             };
         };
     
     
     
-    function checkRatHit(){
+    function checkPirateHit(){
          for(var i = 0; i<liveRockets.length; i++){
         var rocket = liveRockets[i];
         var x = rocket.rocket.left;
@@ -178,26 +210,32 @@ function checkContainer(){
          
              
         if (y>200 && y<250){
-            var ratPosition = rat.rat.left;
-            var ratPadding = 80;
+            var piratePosition = pirate.pirate.left;
+            var piratePadding = 80;
             
-            if((ratPosition - ratPadding) < x && x < (ratPosition + ratPadding)){
-                rat.hasHit = true;
-                canvas.remove(rat.rat);
-               // elementRat.style.webkitAnimationPlayState="paused";
+            if((piratePosition - piratePadding) < x && x < (piratePosition + piratePadding)){
+                pirate.hasHit = true;
+                canvas.remove(pirate.pirate);
+               // elementPirate.style.webkitAnimationPlayState="paused";
                 
                 
                 liveRockets.splice(i, 1)
-                console.log("rat was hit")
-                setTimeout(function(){ rat.draw();  }, 3000);
+                
+                setTimeout(function(){ 
+                    pirate.draw(); 
+                     do{badRocketsRandom = Math.random() * 1700 + 10;
+                    } while (badRocketsRandom > 2500 && badRocketsRandom < 3500)        
+        createBadRocketsInterval = setInterval(createBadRockets, badRocketsRandom)
+        }, 3000);
                 setTimeout(function(){ canShoot = true;  }, 5000);
+                clearInterval(createBadRocketsInterval);
                 
         }
         }
         if (y<0){
             
             liveRockets.splice(i, 1)
-            console.log("you missed")
+           
             setTimeout(function(){ canShoot = true;  }, 1);
             
         }
@@ -212,23 +250,26 @@ function checkContainer(){
         var y = rocket.rocket.top;
         
         if (y<25 && y>1){
-            var carierPosition = chicken.chicken.left;
-            var carierPadding = 120;
+            var carierPosition = carrier.carrier.left;
+            var carierPadding = 95;
             if((carierPosition - carierPadding) < x && x < (carierPosition + carierPadding)){
                 var btnStart = document.getElementById('btnStart');
                 var btnStop = document.getElementById('btnStop');
                 gameStatus = 'stop';
-                chicken.stop = true;
-                rat.stop = true;
-                canvas.remove(chicken.chicken)
-                canvas.remove(rat.rat)
+                carrier.stop = true;
+                pirate.stop = true;
+                canvas.remove(carrier.carrier)
+                canvas.remove(pirate.pirate)
                 var elScore = document.getElementById('scoreValue');
                 score = 0
                 elScore.textContent=0;
-                console.log("stop test 1");
+                lives = 3
+                elLives.textContent=3
+              
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
+                clearInterval(createBadRocketsInterval);
                 clearInterval(monitorGameInterval);
                 
                 btnStart.disabled = false;
@@ -238,7 +279,59 @@ function checkContainer(){
         }
     }
     }
+    
+   
+    function dead(){
+         var livesCheck = parseInt(lives)
+         
+    if(livesCheck==0){
         
+                var btnStart = document.getElementById('btnStart');
+                var btnStop = document.getElementById('btnStop');
+                gameStatus = 'stop';
+                carrier.stop = true;
+                pirate.stop = true;
+                canvas.remove(carrier.carrier)
+                canvas.remove(pirate.pirate)
+                var elScore = document.getElementById('scoreValue');
+                score = 0
+                elScore.textContent=0;
+                lives = 3
+               elLives.textContent=3
+               
+
+                //intervallen stop zetten
+                clearInterval(createContainerInterval);
+                clearInterval(createBadRocketsInterval);
+                clearInterval(monitorGameInterval);
+                
+                btnStart.disabled = false;
+                btnStop.disabled = true;
+                setTimeout(function(){ alert("you died!");  }, 50);
+            
+        
+    }
+    }
+    
+    function checkPlayerHit(){
+        for(var i = 0; i<liveBadRockets.length; i++){
+        var badRocket = liveBadRockets[i];
+        var x = badRocket.badRocket.left;
+        var y = badRocket.badRocket.top;
+        if (y < 850 && y>800){
+            var playerPosition = somePlayer.player.left;
+            var playerPadding = 120;
+            if((playerPosition - playerPadding) < x && x < (playerPosition + playerPadding)){
+            lives--;
+            elLives.textContent=lives;  
+               
+            }
+        }
+            
+        }
+            
+    }
+          
         
         
         
@@ -249,6 +342,7 @@ function checkContainer(){
     var gameStatus = 'start';
     var createContainerInterval;
     var monitorGameInterval;
+    var createBadRocketsInterval;
     var canShoot = true
     
        var createContainers = function(){
@@ -257,38 +351,59 @@ function checkContainer(){
             someContainer.draw();
         	someContainer.fall();
             containers.push(someContainer)
-            console.log(containers)
-           
+         
             var radomLeft = randomXPosition();
             if (radomLeft > 600) someContainer.roll(180);
             else someContainer.roll(-180);
        }
+       
+       var createBadRockets = function(){
+           var piratePosition = pirate.pirate.left;
+            var elementBadRocket = document.getElementById('imgBadRocket')
+            var someBadRocket = new BadRocket(canvas, piratePosition, elementBadRocket)
+            someBadRocket.draw();
+            someBadRocket.badShoot();
+           liveBadRockets.push(someBadRocket)
+
+       }
     
+       
+       
     btnStart.addEventListener('click', function(){
         gameStatus = 'start';
-        chicken.stop = false;
-        rat.stop = false;
-        chicken.draw();
-        chicken.wobble(10);
-        rat.draw();
-        rat.run(30);
+        carrier.stop = false;
+        pirate.stop = false;
+        carrier.draw();
+        carrier.wobble(10);
+        pirate.draw();
+        pirate.run(30);
+        //level();
+         //console.log(actualLevel)
        // canShoot = true;
         
         monitorGameInterval = setInterval(monitorGame, 50);
+        
         createContainerInterval = setInterval(createContainers, 3000);
+        
+            do{badRocketsRandom = Math.random() * 1700 + 10;
+            } while (badRocketsRandom > 2500 && badRocketsRandom < 3500)
+        
+        createBadRocketsInterval = setInterval(createBadRockets, badRocketsRandom)
+        
+        
         //shoot function 
         canvas.on('mouse:down', shootRocket);
         function shootRocket(options) {
             if(canShoot){
                 var xPositionCursor = options.e.layerX;
-        //console.log(xPositionCursor)
+        
                 var someRocket = new Rocket(canvas, xPositionCursor, elementRocket);
                 someRocket.draw()
                 someRocket.shoot()  
                 liveRockets.push(someRocket)
                 canShoot = false;
             }else{
-        console.log("can't shoot FU GAME")
+        console.info("can't shoot FU GAME")
             }
         }
         btnStart.disabled = true;
@@ -307,10 +422,10 @@ function checkContainer(){
 
             btnStop.addEventListener('click', function(){
                  gameStatus = 'stop';
-                 chicken.stop = true;
-                rat.stop = true;
-                canvas.remove(chicken.chicken)
-                canvas.remove(rat.rat)
+                 carrier.stop = true;
+                pirate.stop = true;
+                canvas.remove(carrier.carrier)
+                canvas.remove(pirate.pirate)
                // canvas.remove(currentContainer.container)
                 
                 
@@ -323,14 +438,24 @@ function checkContainer(){
 */
                  var elScore = document.getElementById('scoreValue');
                 score = 0
-                elScore.textContent=0;
-                console.log("stop test 1")
+                elScore.textContent=score;
+                
+                lives = 3
+                elLives.textContent=lives
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
                 clearInterval(monitorGameInterval);
+                clearInterval(createBadRocketsInterval);
+        if (score > highscore) {
+        localStorage.setItem('highscore', score);      
+        }
+           
+            else{
+                localStorage.setItem("highscore", score);
+}
 
-console.log("stop test 2")
+            
 
                 btnStart.disabled = false;
 
