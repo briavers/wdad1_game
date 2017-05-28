@@ -235,7 +235,7 @@ function checkContainer(){
         if (y<0){
             
             liveRockets.splice(i, 1)
-           
+            
             setTimeout(function(){ canShoot = true;  }, 1);
             
         }
@@ -258,6 +258,9 @@ function checkContainer(){
                 gameStatus = 'stop';
                 carrier.stop = true;
                 pirate.stop = true;
+                if (score > highscore) {localStorage.setItem('highscore', score);      
+                }else{localStorage.setItem("highscore", score);
+                }
                 canvas.remove(carrier.carrier)
                 canvas.remove(pirate.pirate)
                 var elScore = document.getElementById('scoreValue');
@@ -265,7 +268,8 @@ function checkContainer(){
                 elScore.textContent=0;
                 lives = 3
                 elLives.textContent=3
-              
+                var highscore = localStorage.getItem('highscore');
+                elHScore.textContent = highscore
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
@@ -291,6 +295,9 @@ function checkContainer(){
                 gameStatus = 'stop';
                 carrier.stop = true;
                 pirate.stop = true;
+                if (score > highscore) {localStorage.setItem('highscore', score);      
+                }else{localStorage.setItem("highscore", score);
+                }
                 canvas.remove(carrier.carrier)
                 canvas.remove(pirate.pirate)
                 var elScore = document.getElementById('scoreValue');
@@ -298,7 +305,8 @@ function checkContainer(){
                 elScore.textContent=0;
                 lives = 3
                elLives.textContent=3
-               
+               var highscore = localStorage.getItem('highscore');
+                elHScore.textContent = highscore
 
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
@@ -321,12 +329,12 @@ function checkContainer(){
         if (y < 850 && y>800){
             var playerPosition = somePlayer.player.left;
             var playerPadding = 120;
-            if((playerPosition - playerPadding) < x && x < (playerPosition + playerPadding)){
-            lives--;
-            elLives.textContent=lives;  
-               
-            }
+                if((playerPosition - playerPadding) < x && x < (playerPosition + playerPadding)){
+                lives--;
+                elLives.textContent=lives; }
+            canvas.remove(badRocket.badRocket)
         }
+        
             
         }
             
@@ -377,6 +385,8 @@ function checkContainer(){
         carrier.wobble(10);
         pirate.draw();
         pirate.run(30);
+        
+        
         //level();
          //console.log(actualLevel)
        // canShoot = true;
@@ -385,7 +395,7 @@ function checkContainer(){
         
         createContainerInterval = setInterval(createContainers, 3000);
         
-            do{badRocketsRandom = Math.random() * 1700 + 10;
+            do{badRocketsRandom = Math.random() * 3500 + 1500;
             } while (badRocketsRandom > 2500 && badRocketsRandom < 3500)
         
         createBadRocketsInterval = setInterval(createBadRockets, badRocketsRandom)
@@ -428,6 +438,10 @@ function checkContainer(){
                 canvas.remove(pirate.pirate)
                // canvas.remove(currentContainer.container)
                 
+                if (score > highscore) {localStorage.setItem('highscore', score);      
+                }else{localStorage.setItem("highscore", score);
+                }
+               
                 
                 /*canvas.remove(container.someContainer)
                 canvas.remove(currentContainer.container)
@@ -442,18 +456,15 @@ function checkContainer(){
                 
                 lives = 3
                 elLives.textContent=lives
-
+                
+                var highscore = localStorage.getItem('highscore');
+                elHScore.textContent = highscore
                 //intervallen stop zetten
                 clearInterval(createContainerInterval);
                 clearInterval(monitorGameInterval);
                 clearInterval(createBadRocketsInterval);
-        if (score > highscore) {
-        localStorage.setItem('highscore', score);      
-        }
-           
-            else{
-                localStorage.setItem("highscore", score);
-}
+        
+
 
             
 
